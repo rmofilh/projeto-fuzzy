@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Corrupção Institucional — Payoff Fuzzy</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="pagina">
+        <header class="cabecalho">
+            <div class="selo" aria-hidden="true">👑</div>
+            <div class="cabecalho-texto">
+                <h1>Corrupção Institucional</h1>
+                <p class="subtitulo">Payoff fuzzy de agir corruptamente — do trono imperial de 1519 (Fugger e os sete eleitores) ao laboratório de hoje</p>
+            </div>
+        </header>
+
+        <section class="presets" aria-labelledby="titulo-presets">
+            <h2 id="titulo-presets">Cenários prontos</h2>
+            <div class="preset-fila">
+                <button type="button" class="btn-preset" data-preset="a">Cenário A (8, 1, 1, 1)</button>
+                <button type="button" class="btn-preset" data-preset="b">Cenário B (8, 9, 9, 9)</button>
+                <button type="button" class="btn-preset" data-preset="1519">1519 (9.5, 9, 9, 9)</button>
+            </div>
+            <p class="pista-preset">A e B compartilham o mesmo prêmio (8): o que separa os dois mundos é apenas a degradação das instituições.</p>
+        </section>
+
+        <section class="entradas" aria-labelledby="titulo-entradas">
+            <h2 id="titulo-entradas">Fatores de entrada <span class="universe">(universo 0–10)</span></h2>
+            <div class="grade-entradas">
+                <div class="card">
+                    <div class="card-titulo">
+                        <span class="emoji" aria-hidden="true">🪙</span>
+                        <label for="premio">Prêmio</label>
+                        <span class="valor" id="valor-premio">8</span>
+                    </div>
+                    <input type="range" id="premio" class="slider" min="0" max="10" step="0.5" value="8">
+                    <p class="grau" id="grau-premio">—</p>
+                </div>
+                <div class="card">
+                    <div class="card-titulo">
+                        <span class="emoji" aria-hidden="true">👁️</span>
+                        <label for="ausencia_fiscalizacao">Ausência de fiscalização</label>
+                        <span class="valor" id="valor-ausencia_fiscalizacao">1</span>
+                    </div>
+                    <input type="range" id="ausencia_fiscalizacao" class="slider" min="0" max="10" step="0.5" value="1">
+                    <p class="grau" id="grau-ausencia_fiscalizacao">—</p>
+                </div>
+                <div class="card">
+                    <div class="card-titulo">
+                        <span class="emoji" aria-hidden="true">👑</span>
+                        <label for="concentracao_poder">Concentração de poder</label>
+                        <span class="valor" id="valor-concentracao_poder">1</span>
+                    </div>
+                    <input type="range" id="concentracao_poder" class="slider" min="0" max="10" step="0.5" value="1">
+                    <p class="grau" id="grau-concentracao_poder">—</p>
+                </div>
+                <div class="card">
+                    <div class="card-titulo">
+                        <span class="emoji" aria-hidden="true">⚖️</span>
+                        <label for="impunidade">Impunidade</label>
+                        <span class="valor" id="valor-impunidade">1</span>
+                    </div>
+                    <input type="range" id="impunidade" class="slider" min="0" max="10" step="0.5" value="1">
+                    <p class="grau" id="grau-impunidade">—</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="resultado" aria-live="polite" aria-labelledby="titulo-resultado">
+            <h2 id="titulo-resultado">Payoff estimado de agir corruptamente</h2>
+            <div class="medidor">
+                <div class="pista">
+                    <div class="marcador" id="marcador"></div>
+                </div>
+                <div class="escala"><span>−10</span><span>0</span><span>+10</span></div>
+            </div>
+            <div class="leitura">
+                <span class="numero" id="numero">–</span>
+                <span class="termo" id="termo">…</span>
+            </div>
+            <p class="erro" id="erro" role="alert" hidden></p>
+        </section>
+
+        <section class="pedagogia" aria-labelledby="titulo-pedagogia">
+            <h2 id="titulo-pedagogia">Como funciona</h2>
+            <ol class="passos">
+                <li>
+                    <span class="passo-numero" aria-hidden="true">1</span>
+                    <p><strong>Fuzzificação.</strong> Cada fator institucional é convertido em graus de pertinência sobre o universo 0–10, porque nenhum desses conceitos é binário: a gradação dos contrapesos importa tanto quanto sua ausência (§4).</p>
+                </li>
+                <li>
+                    <span class="passo-numero" aria-hidden="true">2</span>
+                    <p><strong>Regras.</strong> Uma base de 14 regras em 5 grupos combina os graus por graus de verdade — com portão do prêmio e pesos assimétricos entre fiscalização, poder e punição — e traduz o raciocínio institucional em lógica fuzzy (§5.2, §8).</p>
+                </li>
+                <li>
+                    <span class="passo-numero" aria-hidden="true">3</span>
+                    <p><strong>Defuzzificação.</strong> O centroide colapsa todas as conclusões das regras em um payoff único entre −10 e +10: negativo, agir com retidão domina; positivo, a corrupção passa a ser racional (§4, §8).</p>
+                </li>
+            </ol>
+        </section>
+
+        <footer class="rodape">
+            <p>Demo temática — selo, coroa e moeda como homenagem ao caso 1519 (Fugger, sete eleitores e o trono imperial). Motor: scikit-fuzzy + Flask; o navegador usa somente HTML, CSS e JavaScript, sem dependências externas.</p>
+        </footer>
+    </div>
+    <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>

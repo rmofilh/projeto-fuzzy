@@ -1,0 +1,358 @@
+/* Estilos da demo temática (Etapa 5).
+   Paleta: pergaminho, tinta, carmesim de lacre, ouro. Sem dependências externas. */
+
+:root {
+    --pergaminho: #f6f1e6;
+    --pergaminho-claro: #fbf7ee;
+    --pergaminho-escuro: #ece3d0;
+    --tinta: #3b2b1d;
+    --linha: #d9c9a8;
+    --carmesim: #b03a2e;
+    --lacre-escuro: #7a1f16;
+    --ouro: #c9a227;
+    --verde: #2e7d32;
+    --ambar: #e08e00;
+    --vermelho: #c62828;
+    --sombra: 0 0.35rem 1rem rgba(59, 43, 29, 0.18);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Georgia, "Times New Roman", serif;
+    line-height: 1.55;
+    color: var(--tinta);
+    background: var(--pergaminho);
+    padding: 2rem 1.25rem 3rem;
+}
+
+.pagina {
+    max-width: 58rem;
+    margin-inline: auto;
+}
+
+.pagina h2 {
+    margin: 0 0 1rem;
+    font-size: 1.2rem;
+}
+
+/* ------------------------------------------------------------------ cabeçalho */
+
+.cabecalho {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.selo {
+    width: 4.75rem;
+    height: 4.75rem;
+    flex: 0 0 auto;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    font-size: 2.1rem;
+    background: radial-gradient(circle at 35% 30%, #d8453a, var(--carmesim) 62%, var(--lacre-escuro));
+    box-shadow: 0 0 0 0.4rem var(--linha), var(--sombra);
+}
+
+.cabecalho-texto h1 {
+    margin: 0;
+    font-size: 1.75rem;
+    letter-spacing: 0.01em;
+}
+
+.subtitulo {
+    margin: 0.35rem 0 0;
+    font-style: italic;
+    color: #6b5636;
+}
+
+/* ------------------------------------------------------------------ presets */
+
+.presets {
+    margin-bottom: 1.75rem;
+}
+
+.preset-fila {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-bottom: 0.6rem;
+}
+
+.btn-preset {
+    font: inherit;
+    background: var(--pergaminho-escuro);
+    border: 1px solid var(--linha);
+    border-radius: 0.55rem;
+    padding: 0.55rem 1rem;
+    cursor: pointer;
+    transition: background 0.15s ease, transform 0.1s ease;
+}
+
+.btn-preset:hover {
+    background: #e2d2ae;
+}
+
+.btn-preset:active {
+    transform: translateY(1px);
+}
+
+.btn-preset:disabled {
+    opacity: 0.55;
+    cursor: progress;
+}
+
+.pista-preset {
+    margin: 0.35rem 0 0;
+    font-size: 0.92rem;
+    font-style: italic;
+    color: #6b5636;
+}
+
+/* ------------------------------------------------------------------ entradas */
+
+.entradas {
+    margin-bottom: 1.75rem;
+}
+
+.grade-entradas {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
+    gap: 1.25rem;
+}
+
+.card {
+    background: var(--pergaminho-claro);
+    border: 1px solid var(--linha);
+    border-radius: 0.8rem;
+    padding: 1rem 1.1rem 0.95rem;
+    box-shadow: var(--sombra);
+}
+
+.card-titulo {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+}
+
+.card-titulo .emoji {
+    font-size: 1.15rem;
+}
+
+.card-titulo label {
+    font-weight: bold;
+    font-size: 1.02rem;
+}
+
+.valor {
+    margin-left: auto;
+    font-weight: bold;
+    font-size: 1.05rem;
+    color: var(--carmesim);
+    font-variant-numeric: tabular-nums;
+}
+
+.grau {
+    margin: 0.45rem 0 0;
+    font-size: 0.9rem;
+    font-style: italic;
+    color: #6b5636;
+}
+
+/* ------------------------------------------------------------------ slider */
+
+.slider {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 0.5rem;
+    margin: 0.35rem 0 0.3rem;
+    border-radius: 0.4rem;
+    background: linear-gradient(90deg, var(--carmesim) 80%, #e0d4b8 80%);
+    outline: none;
+}
+
+.slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 1.15rem;
+    height: 1.15rem;
+    border-radius: 50%;
+    background: var(--carmesim);
+    border: 0.15rem solid var(--pergaminho);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+    cursor: grab;
+}
+
+.slider::-moz-range-thumb {
+    width: 1.15rem;
+    height: 1.15rem;
+    border-radius: 50%;
+    background: var(--carmesim);
+    border: 0.15rem solid var(--pergaminho);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+    cursor: grab;
+}
+
+/* ------------------------------------------------------------------ resultado */
+
+.resultado {
+    background: var(--pergaminho-claro);
+    border: 1px solid var(--linha);
+    border-radius: 0.8rem;
+    padding: 1.25rem 1.35rem;
+    box-shadow: var(--sombra);
+    margin-bottom: 1.75rem;
+}
+
+.medidor {
+    display: grid;
+    gap: 0.35rem;
+}
+
+.pista {
+    position: relative;
+    height: 0.9rem;
+    border-radius: 0.5rem;
+    background: linear-gradient(90deg,
+        var(--verde) 0%, var(--verde) 33%,
+        var(--ambar) 33%, var(--ambar) 67%,
+        var(--vermelho) 67%, var(--vermelho) 100%);
+    box-shadow: inset 0 0 0 1px rgba(59, 43, 29, 0.25);
+}
+
+.marcador {
+    position: absolute;
+    left: 10%;
+    top: -0.5rem;
+    width: 0;
+    height: 0;
+    border-left: 0.5rem solid transparent;
+    border-right: 0.5rem solid transparent;
+    border-top: 0.8rem solid var(--tinta);
+    transition: left 0.25s ease-out;
+}
+
+.escala {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    color: #6b5636;
+}
+
+.leitura {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-top: 0.9rem;
+}
+
+.numero {
+    font-size: 2.1rem;
+    font-weight: bold;
+    font-variant-numeric: tabular-nums;
+    color: var(--verde);
+}
+
+.termo {
+    font-size: 1.05rem;
+    font-weight: bold;
+    color: #fff;
+    background: var(--verde);
+    border-radius: 1.2rem;
+    padding: 0.28rem 1rem;
+}
+
+.erro {
+    display: none;
+    margin: 0.9rem 0 0;
+    color: #fff;
+    background: #a4231c;
+    border-radius: 0.5rem;
+    padding: 0.6rem 0.9rem;
+    font-size: 0.95rem;
+}
+
+.erro:not([hidden]) {
+    display: block;
+}
+
+/* ------------------------------------------------------------------ pedagogia */
+
+.pedagogia {
+    margin-bottom: 2rem;
+}
+
+.passos {
+    list-style: none;
+    padding: 0;
+    margin: 0.5rem 0 0;
+    display: grid;
+    gap: 0.9rem;
+}
+
+.passos li {
+    display: flex;
+    gap: 0.9rem;
+    align-items: flex-start;
+    background: var(--pergaminho-claro);
+    border: 1px solid var(--linha);
+    border-radius: 0.7rem;
+    padding: 0.8rem 1rem;
+}
+
+.passo-numero {
+    flex: 0 0 auto;
+    width: 1.9rem;
+    height: 1.9rem;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background: var(--carmesim);
+    color: #fff;
+    font-weight: bold;
+}
+
+.passos p {
+    margin: 0;
+    font-size: 0.97rem;
+}
+
+/* ------------------------------------------------------------------ rodape */
+
+.rodape {
+    font-size: 0.88rem;
+    color: #7a6748;
+    border-top: 1px solid var(--linha);
+    padding-top: 0.9rem;
+    margin-top: 2.5rem;
+}
+
+/* ------------------------------------------------------------------ mobile */
+
+@media (max-width: 48rem) {
+    .cabecalho {
+        gap: 0.9rem;
+    }
+
+    .selo {
+        width: 3.6rem;
+        height: 3.6rem;
+        font-size: 1.6rem;
+    }
+
+    .numero {
+        font-size: 1.8rem;
+    }
+
+    .grade-entradas {
+        grid-template-columns: 1fr;
+    }
+}
