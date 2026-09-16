@@ -165,6 +165,14 @@ body {
     color: #6b5636;
 }
 
+.pertinencias {
+    margin: 0.25rem 0 0;
+    font-size: 0.82rem;
+    color: #6b5636;
+    font-variant-numeric: tabular-nums;
+    overflow-wrap: anywhere;
+}
+
 /* ------------------------------------------------------------------ slider */
 
 .slider {
@@ -268,6 +276,21 @@ body {
     background: var(--verde);
     border-radius: 1.2rem;
     padding: 0.28rem 1rem;
+}
+
+.regras {
+    margin: 0.7rem 0 0;
+    font-size: 0.95rem;
+    color: #6b5636;
+}
+
+.regras[hidden] {
+    display: none;
+}
+
+#regras-lista {
+    font-variant-numeric: tabular-nums;
+    color: var(--tinta);
 }
 
 .erro {

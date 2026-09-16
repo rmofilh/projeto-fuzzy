@@ -64,6 +64,25 @@ function nomeGrau(chave, valor) {
     return GRAUS_POR_CHAVE[chave][GRAUS.indexOf(melhor)];
 }
 
+// Pertinência 0–1 de um valor em um grau, reaproveitando trapmf/trimf do motor.
+function pertinenciaDoGrau(valor, grau) {
+    const parametros = PARAMETROS_GRAUS[grau];
+    if (!parametros) return 0;
+    return parametros.length === 3
+        ? trimf(valor, parametros[0], parametros[1], parametros[2])
+        : trapmf(valor, parametros[0], parametros[1], parametros[2], parametros[3]);
+}
+
+function formatarPorcentagem(fracao) {
+    return (fracao * 100).toFixed(1).replace(".", ",") + "%";
+}
+
+function textoPertinencias(valor) {
+    return GRAUS.map(function (grau) {
+        return grau + " " + formatarPorcentagem(pertinenciaDoGrau(valor, grau));
+    }).join(" · ");
+}
+
 let temporizador = null;
 
 function lerEntradas() {
@@ -80,8 +99,12 @@ function lerEntradas() {
 function atualizarRotulos(chave) {
     const input = document.getElementById(chave);
     if (!input) return;
-    document.getElementById("valor-" + chave).textContent = input.value.replace(".", ",");
-    document.getElementById("grau-" + chave).textContent = nomeGrau(chave, parseFloat(input.value));
+    const rotulo = document.getElementById("valor-" + chave);
+    if (rotulo) rotulo.textContent = input.value.replace(".", ",");
+    const grau = document.getElementById("grau-" + chave);
+    if (grau) grau.textContent = nomeGrau(chave, parseFloat(input.value));
+    const pert = document.getElementById("pert-" + chave);
+    if (pert) pert.textContent = textoPertinencias(parseFloat(input.value));
     const porcentagem = parseFloat(input.value) / 10 * 100;
     input.style.background =
         "linear-gradient(90deg, var(--carmesim) " + porcentagem + "%, #e0d4b8 " + porcentagem + "%)";
@@ -103,6 +126,26 @@ function mostrarErro(mensagem) {
     document.getElementById("erro").hidden = false;
     document.getElementById("numero").textContent = "–";
     document.getElementById("numero").style.color = "";
+    esconderRegras();
+}
+
+function esconderRegras() {
+    const linha = document.getElementById("regras");
+    if (linha) linha.hidden = true;
+}
+
+function atualizarRegras(regras) {
+    const linha = document.getElementById("regras");
+    const lista = document.getElementById("regras-lista");
+    if (!linha || !lista) return;
+    // Contrato Prompts 1-2: API retorna {valor, termo, regras}. Se a chave
+    // estiver ausente (backend antigo), esconde a linha sem erro.
+    if (!Array.isArray(regras)) {
+        linha.hidden = true;
+        return;
+    }
+    linha.hidden = false;
+    lista.textContent = regras.length ? regras.join(", ") : "—";
 }
 
 function botoes(estado) {
@@ -147,6 +190,7 @@ async function calcular() {
     }
 
     atualizarResultado(dados.valor, dados.termo);
+    atualizarRegras(dados ? dados.regras : undefined);
 }
 
 document.addEventListener("DOMContentLoaded", function () {

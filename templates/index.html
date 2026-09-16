@@ -37,6 +37,7 @@
                     </div>
                     <input type="range" id="premio" class="slider" min="0" max="10" step="0.5" value="8">
                     <p class="grau" id="grau-premio">—</p>
+                    <p class="pertinencias" id="pert-premio">—</p>
                 </div>
                 <div class="card">
                     <div class="card-titulo">
@@ -46,6 +47,7 @@
                     </div>
                     <input type="range" id="ausencia_fiscalizacao" class="slider" min="0" max="10" step="0.5" value="1">
                     <p class="grau" id="grau-ausencia_fiscalizacao">—</p>
+                    <p class="pertinencias" id="pert-ausencia_fiscalizacao">—</p>
                 </div>
                 <div class="card">
                     <div class="card-titulo">
@@ -55,6 +57,7 @@
                     </div>
                     <input type="range" id="concentracao_poder" class="slider" min="0" max="10" step="0.5" value="1">
                     <p class="grau" id="grau-concentracao_poder">—</p>
+                    <p class="pertinencias" id="pert-concentracao_poder">—</p>
                 </div>
                 <div class="card">
                     <div class="card-titulo">
@@ -64,6 +67,7 @@
                     </div>
                     <input type="range" id="impunidade" class="slider" min="0" max="10" step="0.5" value="1">
                     <p class="grau" id="grau-impunidade">—</p>
+                    <p class="pertinencias" id="pert-impunidade">—</p>
                 </div>
             </div>
         </section>
@@ -80,6 +84,7 @@
                 <span class="numero" id="numero">–</span>
                 <span class="termo" id="termo">…</span>
             </div>
+            <p class="regras" id="regras" hidden>Regras ativas: <span id="regras-lista">—</span></p>
             <p class="erro" id="erro" role="alert" hidden></p>
         </section>
 
@@ -92,7 +97,7 @@
                 </li>
                 <li>
                     <span class="passo-numero" aria-hidden="true">2</span>
-                    <p><strong>Regras.</strong> Uma base de 14 regras em 5 grupos combina os graus por graus de verdade — com portão do prêmio e pesos assimétricos entre fiscalização, poder e punição — e traduz o raciocínio institucional em lógica fuzzy (§5.2, §8).</p>
+                    <p><strong>Regras.</strong> Uma base de 15 regras em 6 grupos combina os graus por graus de verdade — com portão do prêmio, pesos assimétricos entre fiscalização, poder e punição, e fallback Zona de ignorância sem-buracos — e traduz o raciocínio institucional em lógica fuzzy (§5.2, §8).</p>
                 </li>
                 <li>
                     <span class="passo-numero" aria-hidden="true">3</span>

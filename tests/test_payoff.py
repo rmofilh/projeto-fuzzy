@@ -170,3 +170,68 @@ def test_validacao_erro():
         execute(5, -1, 5, 5)
     with pytest.raises((ValueError, TypeError)):
         execute("x", 1, 1, 1)
+
+
+# ---------------------------------------------------------------------------
+# Bloco D — ex-buracos + bordas/varredura (Prompt 4/5)
+# ---------------------------------------------------------------------------
+
+
+def test_ex_buraco_8411():
+    """Ex-buraco 8,4,1,1: nenhuma das 14 dispara, fallback 15 cobre em Zona.
+
+    Sem exceção (sem KeyError): o fallback curinga Zona (regra 15, peso
+    baixo) preenche o vazio e o cálculo retorna Zona de risco.
+    """
+    resultado = execute(8, 4, 1, 1)
+    assert resultado["termo"] == ZONA_RISCO
+
+
+def test_ex_buraco_4044():
+    """Ex-buraco 4,0,4,4: nenhuma das 14 dispara, fallback 15 cobre em Zona.
+
+    Sem exceção (sem KeyError): mesmo mecanismo do 8411 — curinga Zona
+    garante retorno válido no centro da zona de risco.
+    """
+    resultado = execute(4, 0, 4, 4)
+    assert resultado["termo"] == ZONA_RISCO
+
+
+def test_varredura_sem_keyerror():
+    """Varredura p in [4,8] x f 0..10 passo 1: nunca levanta KeyError."""
+    termos_validos = {NAO_COMPENSA, ZONA_RISCO, COMPENSA}
+    for p in [4, 8]:
+        for f in range(0, 11, 1):
+            for c, i in [(1, 1), (4, 4)]:
+                resultado = execute(p, f, c, i)
+                assert resultado["termo"] in termos_validos
+                assert isinstance(resultado["valor"], float)
+
+
+def test_borda_10():
+    """Borda máxima: prêmio 10 + colapso total compensa (sem erro de borda)."""
+    resultado = execute(10, 9, 9, 9)
+    assert resultado["termo"] == COMPENSA
+
+
+def test_regras_presentes():
+    """Contrato API via test_client: 200 contém valor/termo/regras."""
+    from app import create_app
+
+    client = create_app().test_client()
+    resposta = client.post(
+        "/api/calcular",
+        json={
+            "premio": 8,
+            "ausencia_fiscalizacao": 9,
+            "concentracao_poder": 9,
+            "impunidade": 9,
+        },
+    )
+    assert resposta.status_code == 200
+    dados = resposta.get_json()
+    assert "valor" in dados
+    assert "termo" in dados
+    assert "regras" in dados
+    assert isinstance(dados["regras"], list)
+    assert len(dados["regras"]) > 0

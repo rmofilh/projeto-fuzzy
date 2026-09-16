@@ -59,10 +59,38 @@ def calcular():
             )
 
         resultado = execute(p, f, c, i)
-    except (KeyError, TypeError, ValueError) as erro:
+    except ValueError as erro:
+        # Validação de tipo/faixa: mensagens já são PT-BR no service/routes.
         return jsonify({"erro": str(erro)}), 400
+    except TypeError:
+        return jsonify({
+            "erro": "Os 4 campos (premio, ausencia_fiscalizacao, "
+                    "concentracao_poder, impunidade) devem ser números entre 0 e 10."
+        }), 400
+    except KeyError:
+        # Nunca vazar "'payoff'" ou nome interno de chave.
+        return jsonify({
+            "erro": "Falha interna ao calcular o payoff. Tente novamente com outros valores."
+        }), 500
+    except Exception:
+        return jsonify({
+            "erro": "Erro inesperado ao calcular o payoff. Tente novamente."
+        }), 500
 
-    return jsonify({
-        "valor": round(float(resultado["valor"]), 4),
-        "termo": resultado["termo"],
-    }), 200
+    # Fallback Zona (valor 0.0) é resultado válido: retorna 200 normal.
+    try:
+        valor = round(float(resultado["valor"]), 4)
+        termo = resultado["termo"]
+    except (KeyError, TypeError, ValueError):
+        return jsonify({
+            "erro": "Falha interna ao calcular o payoff. Tente novamente com outros valores."
+        }), 500
+
+    resposta = {"valor": valor, "termo": termo}
+    regras = resultado.get("regras") if isinstance(resultado, dict) else None
+    if isinstance(regras, list):
+        try:
+            resposta["regras"] = [int(r) for r in regras]
+        except (TypeError, ValueError):
+            pass
+    return jsonify(resposta), 200

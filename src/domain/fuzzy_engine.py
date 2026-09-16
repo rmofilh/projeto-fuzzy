@@ -5,7 +5,9 @@ no payoff líquido de agir corruptamente (universo -10 a +10, 3 termos).
 
 Referências conceitual (docs/documentacao-conceitual.md):
 - §5.1: universos de discurso, direção dos graus e funções de pertinência.
-- §5.2: base de regras fuzzy (14 regras em 5 grupos lógicos).
+- §5.2: base de regras fuzzy (14 regras em 5 grupos lógicos + 1 fallback
+  curinga Zona → 15 regras; o fallback tem peso baixo e só preenche buracos
+  onde nenhuma das 14 dispara, sem deslocar valor ≥0.8 nem mudar termo).
 """
 
 import numpy as np
@@ -72,8 +74,9 @@ payoff["zona_risco"] = fuzz.trimf(UNIVERSO_SAIDA, [-4, 0, 4])
 payoff["compensa"] = fuzz.trapmf(UNIVERSO_SAIDA, [2, 6, 10, 10])
 
 # ---------------------------------------------------------------------------
-# Base de regras (§5.2): 14 regras em 5 grupos lógicos. Alias locais para
-# manter as expressões das regras fiéis à notação da especificação.
+# Base de regras (§5.2): 14 regras em 5 grupos lógicos + 1 fallback curinga
+# (14+1 = 15). Alias locais para manter as expressões das regras fiéis à
+# notação da especificação.
 # ---------------------------------------------------------------------------
 pre = premio
 aus = ausencia_fiscalizacao
@@ -164,6 +167,27 @@ regra14 = ctrl.Rule(
     payoff["zona_risco"],
 )
 
+# Regra 15 (fallback curinga §5.2, 14+1): cobre os ~6% de buracos onde nenhuma
+# das 14 dispara (ex: 8,4,1,1). Antecedente curinga g2 em OR → zona_risco com
+# peso baixo (0.1), para só preencher o vazio sem puxar os 14 casos existentes
+# (deslocamento <0.8, termo inalterado). Usa `weight` se disponível, senão
+# consequente ponderado (%) como antecedente fraco equivalente.
+try:
+    regra15 = ctrl.Rule(
+        pre["g2"] | aus["g2"] | con["g2"] | imp["g2"],
+        payoff["zona_risco"],
+        weight=0.1,
+        label="regra15 fallback curinga Zona",
+    )
+except TypeError:
+    # skfuzzy 0.5.0: ctrl.Rule sem parâmetro `weight` → consequente ponderado
+    # (%) como antecedente fraco equivalente (peso baixo).
+    regra15 = ctrl.Rule(
+        pre["g2"] | aus["g2"] | con["g2"] | imp["g2"],
+        payoff["zona_risco"] % 0.1,
+        label="regra15 fallback curinga Zona",
+    )
+
 REGRAS = [
     regra1,
     regra2,
@@ -179,12 +203,22 @@ REGRAS = [
     regra12,
     regra13,
     regra14,
+    regra15,
 ]
 
-assert len(REGRAS) == 14, "A base deve ter exatamente 14 regras (§5.2)"
+assert len(REGRAS) == 15, "A base deve ter exatamente 15 regras §5.2 (14+1 fallback)"
 
 sistema = ctrl.ControlSystem(REGRAS)
-simulacao = ctrl.ControlSystemSimulation(sistema)
+
+
+def nova_simulacao():
+    """Cria uma simulação nova por chamada (thread-safe, §5.2).
+
+    Retorna: ctrl.ControlSystemSimulation nova ligada a `sistema`. Nunca
+    reutilizar instância global entre chamadas/threads.
+    """
+    return ctrl.ControlSystemSimulation(sistema)
+
 
 _ENTRADAS = ("premio", "ausencia_fiscalizacao", "concentracao_poder", "impunidade")
 
@@ -212,20 +246,28 @@ def calcular_payoff(p, f, c, i):
         i: impunidade (ausência de punição certa e coerente).
 
     Retorna: payoff líquido estimado, float no universo -10 a +10
-    (defuzzificação por centroide).
+    (defuzzificação por centroide). Se nenhuma regra disparar
+    (output=={}), retorna 0.0 (Zona de risco) sem levantar KeyError —
+    o fallback regra15 cobre ~todos os buracos, esta guarda cobre o resto.
+
+    Usa simulação nova por chamada via nova_simulacao() (thread-safe).
 
     Lança ValueError se qualquer entrada está fora da faixa 0-10.
     """
     for nome, valor in zip(_ENTRADAS, (p, f, c, i)):
         _validar_entrada(valor, nome)
 
-    simulacao.input["premio"] = p
-    simulacao.input["ausencia_fiscalizacao"] = f
-    simulacao.input["concentracao_poder"] = c
-    simulacao.input["impunidade"] = i
-    simulacao.compute()
+    sim = nova_simulacao()
+    sim.input["premio"] = p
+    sim.input["ausencia_fiscalizacao"] = f
+    sim.input["concentracao_poder"] = c
+    sim.input["impunidade"] = i
+    sim.compute()
 
-    return float(simulacao.output["payoff"])
+    if not sim.output or "payoff" not in sim.output:
+        return 0.0
+
+    return float(sim.output["payoff"])
 
 
 def classificar_payoff(valor):
@@ -240,12 +282,63 @@ def classificar_payoff(valor):
     Retorna: label PT-BR do termo ("Não compensa", "Zona de risco" ou
     "Compensa se corromper").
     """
+    # Borda interp_membership: trapmf compensa [2,6,10,10] em valor==10.0
+    # sofre erro de borda; clampe só aqui (não altera inferência).
+    if valor >= 10.0:
+        valor = 9.99
     pertinencias = {
         termo: fuzz.interp_membership(UNIVERSO_SAIDA, payoff[termo].mf, valor)
         for termo in LABELS_TERMOS_PAYOFF
     }
     melhor_termo = max(pertinencias, key=pertinencias.get)
     return LABELS_TERMOS_PAYOFF[melhor_termo]
+
+
+def regras_ativas(p, f, c, i):
+    """Retorna os índices 1-based das regras cujo antecedente disparou >0.
+
+    Não altera a inferência: apenas fuzzifica as 4 entradas e avalia o grau
+    de disparo de cada antecedente (AND=min, OR=max, NOT=1-x, mesmos
+    and_func/or_func de cada regra). Útil para explicar o resultado na API
+    sem expor skfuzzy fora do domínio.
+
+    Argumentos: mesmos de calcular_payoff (universo 0-10).
+
+    Retorna: lista de ints, ex: [1] ou [15]. Pode ser vazia se nada
+    disparar (caso raro; o fallback regra15 cobre ~todos os buracos).
+
+    Lança ValueError se qualquer entrada está fora da faixa 0-10.
+    """
+    for nome, valor in zip(_ENTRADAS, (p, f, c, i)):
+        _validar_entrada(valor, nome)
+
+    # Import local para não mexer no topo do motor fuzzy.
+    from skfuzzy.control.controlsystem import CrispValueCalculator
+    from skfuzzy.control.term import TermAggregate
+
+    sim = nova_simulacao()
+    sim.input["premio"] = p
+    sim.input["ausencia_fiscalizacao"] = f
+    sim.input["concentracao_poder"] = c
+    sim.input["impunidade"] = i
+
+    CrispValueCalculator(premio, sim).fuzz(p)
+    CrispValueCalculator(ausencia_fiscalizacao, sim).fuzz(f)
+    CrispValueCalculator(concentracao_poder, sim).fuzz(c)
+    CrispValueCalculator(impunidade, sim).fuzz(i)
+
+    ativas = []
+    for indice, regra in enumerate(REGRAS, start=1):
+        antecedente = regra.antecedent
+        if isinstance(antecedente, TermAggregate):
+            antecedente.agg_methods = regra._aggregation_methods
+        try:
+            disparo = float(antecedente.membership_value[sim])
+        except (TypeError, ValueError):
+            continue
+        if disparo > 0:
+            ativas.append(indice)
+    return ativas
 
 
 def debug_membership():

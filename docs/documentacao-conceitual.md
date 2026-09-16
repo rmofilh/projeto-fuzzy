@@ -86,10 +86,11 @@ Para as três variáveis institucionais, isso significa medir a vertente inversa
 
 ### 5.2 Base de Regras Fuzzy
 
-Com 4 entradas de 4 graus cada, uma matriz exaustiva teria 4⁴ = 256 regras — inviável e desnecessário (o exemplo de referência do professor, com número semelhante de variáveis, usa apenas ~14 regras selecionadas). A base abaixo (14 regras) foi construída em 5 grupos lógicos, com dois cuidados de desenho deliberados:
+Com 4 entradas de 4 graus cada, uma matriz exaustiva teria 4⁴ = 256 regras — inviável e desnecessário (o exemplo de referência do professor, com número semelhante de variáveis, usa apenas um conjunto reduzido de regras selecionadas). A base abaixo (15 regras) foi construída em 6 grupos lógicos, com três cuidados de desenho deliberados:
 
 1. **Portão do prêmio:** toda regra que conclui "compensa" a partir de um único contrapeso quebrado exige também que o prêmio **não** esteja no grau mínimo (notação `NÃO Prêmio[1]`). Isso evita que a regra colida com a regra-portão "sem prêmio → não compensa" quando os dois valores extremos são definidos simultaneamente — as regiões de disparo ficam mutuamente exclusivas por construção, em vez de depender da defuzzificação para resolver um conflito.
 2. **Peso assimétrico entre os fatores institucionais:** fiscalização (mídia/povo) sozinha, mesmo no grau máximo de ausência, leva apenas a "zona de risco" — sem captura institucional formal (concentração de poder) ou impunidade garantida, ainda existe risco real de outro canal barrar a corrupção. Concentração de poder e impunidade, isoladamente no grau máximo, já bastam para "compensa". Essa hierarquia evita que o sistema trate os três fatores como equivalentes e dá textura ao resultado.
+3. **Cobertura total sem buracos (Zona de ignorância):** uma base seletiva é, por definição, uma base Mamdani incompleta — ela não cobre todo o hipercubo 0–10⁴, de modo que existem combinações onde nenhuma regra dispara e a inferência ficaria sem saída. O 6º grupo resolve isso por construção com uma única regra curinga — `Prêmio[2] OU Fiscalização[2] OU Concentração[2] OU Impunidade[2] → Zona de risco`, com peso 0,1. O grau 2 foi escolhido como curinga porque sua faixa intermediária sobrepõe g1/g3 em quase todo o universo, e o OU garante disparo amplo; a conclusão Zona de risco (centro 0) é neutra por definição. O peso baixo faz o fallback ser engolido onde qualquer regra forte dispara (deslocamento < 0,8, termo inalterado — A e B mantêm −6,8889 / +4,1624), e só determina o resultado onde nenhuma das outras dispara. Uma guarda final retorna 0,0 (Zona de risco) no caso residual em que nem o curinga dispare, de modo que o sistema nunca fica sem resposta em nenhum ponto do universo.
 
 | Nº | Grupo | Regra (SE → ENTÃO) | Racional |
 |---|---|---|---|
@@ -107,6 +108,7 @@ Com 4 entradas de 4 graus cada, uma matriz exaustiva teria 4⁴ = 256 regras —
 | 12 | Zona de risco genuína | Impunidade[3] E Concentração[2] → **Zona de risco** | Um fator ruim, outro ok — ambiguidade real |
 | 13 | Zona de risco genuína | Fiscalização[3] E Prêmio[3] → **Zona de risco** | Fiscalização fraca + prêmio alto, sem colapso institucional |
 | 14 | Zona de risco genuína | Fiscalização[2] E Concentração[2] E Impunidade[2] → **Zona de risco** | Deterioração leve e uniforme nos três — estado intermediário puro |
+| 15 | Zona de ignorância (fallback) | Prêmio[2] OU Fiscalização[2] OU Concentração[2] OU Impunidade[2] → **Zona de risco** (peso 0,1) | Cobertura total: só decide onde nenhuma outra dispara; onde há regra forte, é engolido sem mudar o termo |
 
 ### 5.3 Ferramenta de Implementação
 
@@ -145,7 +147,7 @@ Como utilidade mínima/nichada, o framework proposto é generalizável: a mesma 
 
 - O projeto é **ilustrativo e pedagógico**, não um modelo preditivo ou econométrico validado empiricamente.
 - Não há cálculo formal de equilíbrio de Nash ou de teoria dos jogos aplicada — a teoria dos jogos contribui apenas como framework conceitual (seção 3).
-- Os universos de discurso, a direção dos graus, as funções de pertinência, a base de regras e a ferramenta de implementação já estão fixados (seções 5.1, 5.2 e 5.3). O único ponto ainda aberto são os **nomes finais** das variáveis (atualmente com rótulos genéricos), uma questão puramente estética que não afeta a lógica, os cálculos ou a implementação.
+- Os universos de discurso, a direção dos graus, as funções de pertinência, a base de 15 regras em 6 grupos e a ferramenta de implementação já estão fixados (seções 5.1, 5.2 e 5.3). O único ponto ainda aberto são os **nomes finais** das variáveis (atualmente com rótulos genéricos), uma questão puramente estética que não afeta a lógica, os cálculos ou a implementação.
 - A execução e documentação formal da comparação entre os Cenários A e B (seção 6) foi deliberadamente pausada nesta etapa do projeto, para priorizar o fechamento da base de regras e da ferramenta antes de partir para a implementação. A descrição conceitual da seção 6 permanece válida e será retomada após o motor fuzzy estar implementado.
 
 ---
