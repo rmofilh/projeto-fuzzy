@@ -307,6 +307,126 @@ body {
     display: block;
 }
 
+/* ------------------------------------------------------------------ graficos */
+
+.graficos {
+    margin-bottom: 1.75rem;
+}
+
+.graficos .universe {
+    font-size: 0.85rem;
+    font-weight: normal;
+    font-style: italic;
+    color: #6b5636;
+}
+
+.grade-graficos {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
+    gap: 1.25rem;
+    margin-bottom: 1.25rem;
+}
+
+.grafico {
+    margin: 0;
+}
+
+.grafico figcaption {
+    font-weight: bold;
+    font-size: 1.02rem;
+    margin-bottom: 0.5rem;
+}
+
+.grafico-svg {
+    width: 100%;
+    height: auto;
+    display: block;
+    background: var(--pergaminho);
+    border: 1px solid var(--linha);
+    border-radius: 0.55rem;
+}
+
+.grafico-svg text {
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 9px;
+    fill: #6b5636;
+}
+
+.grafico-svg .grade {
+    stroke: var(--linha);
+    stroke-width: 0.5;
+    opacity: 0.6;
+}
+
+.grafico-svg .eixo {
+    stroke: var(--tinta);
+    stroke-width: 1;
+}
+
+.grafico-svg .marcador-valor {
+    stroke: var(--tinta);
+    stroke-width: 1.5;
+    stroke-dasharray: 4 2;
+}
+
+.legenda {
+    margin: 0.5rem 0 0;
+    font-size: 0.82rem;
+    color: #6b5636;
+}
+
+.legenda .amostra {
+    font-weight: bold;
+}
+
+.legenda .amostra.g1 { color: #d9c9a8; }
+.legenda .amostra.g2 { color: var(--ouro); }
+.legenda .amostra.g3 { color: var(--carmesim); }
+.legenda .amostra.g4 { color: var(--lacre-escuro); }
+.legenda .amostra.saida-nao { color: var(--verde); }
+.legenda .amostra.saida-zona { color: var(--ambar); }
+.legenda .amostra.saida-sim { color: var(--vermelho); }
+
+.regras-ativas h3 {
+    margin: 0 0 0.75rem;
+    font-size: 1.05rem;
+}
+
+.tabela-regras {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.92rem;
+}
+
+.tabela-regras th,
+.tabela-regras td {
+    text-align: left;
+    padding: 0.45rem 0.6rem;
+    border: 1px solid var(--linha);
+    vertical-align: top;
+}
+
+.tabela-regras thead th {
+    background: var(--pergaminho-escuro);
+}
+
+.tabela-regras tbody tr:nth-child(even) {
+    background: var(--pergaminho);
+}
+
+.tabela-regras .col-num {
+    width: 3rem;
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+}
+
+.regras-vazio {
+    margin: 0;
+    font-size: 0.92rem;
+    font-style: italic;
+    color: #6b5636;
+}
+
 /* ------------------------------------------------------------------ pedagogia */
 
 .pedagogia {
@@ -376,6 +496,10 @@ body {
     }
 
     .grade-entradas {
+        grid-template-columns: 1fr;
+    }
+
+    .grade-graficos {
         grid-template-columns: 1fr;
     }
 }
