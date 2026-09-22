@@ -383,9 +383,6 @@ body {
 .legenda .amostra.g2 { color: var(--ouro); }
 .legenda .amostra.g3 { color: var(--carmesim); }
 .legenda .amostra.g4 { color: var(--lacre-escuro); }
-.legenda .amostra.saida-nao { color: var(--verde); }
-.legenda .amostra.saida-zona { color: var(--ambar); }
-.legenda .amostra.saida-sim { color: var(--vermelho); }
 
 .regras-ativas h3 {
     margin: 0 0 0.75rem;

@@ -16,6 +16,24 @@
             </div>
         </header>
 
+        <section class="pedagogia" aria-labelledby="titulo-pedagogia">
+            <h2 id="titulo-pedagogia">Como funciona</h2>
+            <ol class="passos">
+                <li>
+                    <span class="passo-numero" aria-hidden="true">1</span>
+                    <p><strong>Fuzzificação.</strong> Cada fator institucional é convertido em graus de pertinência sobre o universo 0–10, porque nenhum desses conceitos é binário: a gradação dos contrapesos importa tanto quanto sua ausência (§4).</p>
+                </li>
+                <li>
+                    <span class="passo-numero" aria-hidden="true">2</span>
+                    <p><strong>Regras.</strong> Uma base de 15 regras em 6 grupos combina os graus por graus de verdade — com portão do prêmio, pesos assimétricos entre fiscalização, poder e punição, e fallback Zona de ignorância sem-buracos — e traduz o raciocínio institucional em lógica fuzzy (§5.2, §8).</p>
+                </li>
+                <li>
+                    <span class="passo-numero" aria-hidden="true">3</span>
+                    <p><strong>Defuzzificação.</strong> O centroide colapsa todas as conclusões das regras em um payoff único entre −10 e +10: negativo, agir com retidão domina; positivo, a corrupção passa a ser racional (§4, §8).</p>
+                </li>
+            </ol>
+        </section>
+
         <section class="presets" aria-labelledby="titulo-presets">
             <h2 id="titulo-presets">Cenários prontos</h2>
             <div class="preset-fila">
@@ -111,34 +129,11 @@
                     <svg id="graf-impunidade" class="grafico-svg" viewBox="0 0 300 160" role="img" aria-label="Curvas g1 a g4 da impunidade com marcador do valor atual"></svg>
                     <p class="legenda"><span class="amostra g1">—</span> g1 <span class="amostra g2">—</span> g2 <span class="amostra g3">—</span> g3 <span class="amostra g4">—</span> g4</p>
                 </figure>
-                <figure class="card grafico">
-                    <figcaption>Payoff <span class="universe">(−10…+10)</span></figcaption>
-                    <svg id="graf-payoff" class="grafico-svg" viewBox="0 0 300 160" role="img" aria-label="Termos de saída do payoff com marcador do valor calculado"></svg>
-                    <p class="legenda"><span class="amostra saida-nao">—</span> Não compensa <span class="amostra saida-zona">—</span> Zona <span class="amostra saida-sim">—</span> Compensa</p>
-                </figure>
             </div>
             <div class="card regras-ativas">
                 <h3>Regras ativas</h3>
                 <div id="regras-tabela"><p class="regras-vazio">…</p></div>
             </div>
-        </section>
-
-        <section class="pedagogia" aria-labelledby="titulo-pedagogia">
-            <h2 id="titulo-pedagogia">Como funciona</h2>
-            <ol class="passos">
-                <li>
-                    <span class="passo-numero" aria-hidden="true">1</span>
-                    <p><strong>Fuzzificação.</strong> Cada fator institucional é convertido em graus de pertinência sobre o universo 0–10, porque nenhum desses conceitos é binário: a gradação dos contrapesos importa tanto quanto sua ausência (§4).</p>
-                </li>
-                <li>
-                    <span class="passo-numero" aria-hidden="true">2</span>
-                    <p><strong>Regras.</strong> Uma base de 15 regras em 6 grupos combina os graus por graus de verdade — com portão do prêmio, pesos assimétricos entre fiscalização, poder e punição, e fallback Zona de ignorância sem-buracos — e traduz o raciocínio institucional em lógica fuzzy (§5.2, §8).</p>
-                </li>
-                <li>
-                    <span class="passo-numero" aria-hidden="true">3</span>
-                    <p><strong>Defuzzificação.</strong> O centroide colapsa todas as conclusões das regras em um payoff único entre −10 e +10: negativo, agir com retidão domina; positivo, a corrupção passa a ser racional (§4, §8).</p>
-                </li>
-            </ol>
         </section>
 
         <footer class="rodape">
